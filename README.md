@@ -21,6 +21,12 @@ The files that will be synced are:
 
 <img width="531" height="410" alt="image" src="https://github.com/user-attachments/assets/2d131e2d-ca2a-4382-9b61-d60c18ca09b8" />
 
-<img width="522" height="477" alt="image" src="https://github.com/user-attachments/assets/e917cf25-587f-46a0-af52-05afc36a656b" />
+<img width="519" height="474" alt="image" src="https://github.com/user-attachments/assets/ad548256-8133-4fdc-a3bb-cee52e7334cc" />
+
+<img width="503" height="478" alt="image" src="https://github.com/user-attachments/assets/a47b89e1-e92b-4a94-88f8-62fc3abf5f34" />
+
+<img width="567" height="904" alt="image" src="https://github.com/user-attachments/assets/c2049f0e-4d0f-4aab-aa2e-12230d0f4531" />
+
+
 
 
