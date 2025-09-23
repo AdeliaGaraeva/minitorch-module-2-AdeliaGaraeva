@@ -27,6 +27,9 @@ The files that will be synced are:
 
 <img width="567" height="904" alt="image" src="https://github.com/user-attachments/assets/c2049f0e-4d0f-4aab-aa2e-12230d0f4531" />
 
+<img width="528" height="902" alt="image" src="https://github.com/user-attachments/assets/ca32f7b0-b1b5-400f-9908-78fa7434394d" />
+
+
 
 
 
