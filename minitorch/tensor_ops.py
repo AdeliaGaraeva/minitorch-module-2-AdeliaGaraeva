@@ -45,7 +45,7 @@ class TensorOps:
 
     @staticmethod
     def matrix_multiply(a: Tensor, b: Tensor) -> Tensor:
-        raise NotImplementedError("Not implemented in this assignment")
+        pass
 
     cuda = False
 
@@ -222,7 +222,15 @@ class SimpleOps(TensorOps):
 
     @staticmethod
     def matrix_multiply(a: "Tensor", b: "Tensor") -> "Tensor":
-        raise NotImplementedError("Not implemented in this assignment")
+        batch_size = a.shape[0]
+        in_size = a.shape[1]
+        out_size = b.shape[1]
+
+        a_expanded = a.contiguous().view(batch_size, in_size, 1)
+        b_expanded = b.contiguous().view(1, in_size, out_size)
+        mul = a_expanded * b_expanded
+        output = mul.sum(dim=1).view(batch_size, out_size)
+        return output
 
     is_cuda = False
 
@@ -268,8 +276,15 @@ def tensor_map(fn: Callable[[float], float]) -> Any:
         in_shape: Shape,
         in_strides: Strides,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError("Need to implement for Task 2.3")
+        out_ind = np.zeros(len(out_shape))
+        in_ind = np.zeros(len(in_shape))
+        for i in range(int(np.prod(out_shape))):
+            # достанем out_ind
+            to_index(i, out_shape, out_ind)
+            # делаем бродкастинг и берем соотв in_ind
+            broadcast_index(out_ind, out_shape, in_shape, in_ind)
+
+            out[index_to_position(out_ind, out_strides)] = fn(in_storage[index_to_position(in_ind, in_strides)])
 
     return _map
 
@@ -318,8 +333,15 @@ def tensor_zip(fn: Callable[[float, float], float]) -> Any:
         b_shape: Shape,
         b_strides: Strides,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError("Need to implement for Task 2.3")
+        out_ind = np.zeros(len(out_shape))
+        a_ind_broad = np.zeros(len(a_shape))
+        b_ind_broad = np.zeros(len(b_shape))
+
+        for i in range(int(np.prod(out_shape))):
+            to_index(i, out_shape, out_ind)
+            broadcast_index(out_ind, out_shape, a_shape, a_ind_broad)
+            broadcast_index(out_ind, out_shape, b_shape, b_ind_broad)
+            out[index_to_position(out_ind, out_strides)] = fn(a_storage[index_to_position(a_ind_broad, a_strides)], b_storage[index_to_position(b_ind_broad, b_strides)])
 
     return _zip
 
@@ -354,9 +376,18 @@ def tensor_reduce(fn: Callable[[float, float], float]) -> Any:
         a_strides: Strides,
         reduce_dim: int,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError("Need to implement for Task 2.3")
-
+        # уменьшает размерность тензора, агрегируя значения вдоль осей
+        # идем по большому 
+        a_index = np.zeros_like(a_shape)
+        out_ind = np.zeros_like(out_shape)
+        for i in range(int(np.prod(a_shape))):
+            # получили нормальный индекс для i элем
+            to_index(i, a_shape, a_index)
+            # индексы для всех размерностей сохраняются кроме той что убираем
+            out_ind = [a_index[j] for j in range(len(a_shape))]
+            out_ind[reduce_dim] = 0
+            # аггрег функция
+            out[index_to_position(out_ind, out_strides)] = fn(out[index_to_position(out_ind, out_strides)], a_storage[index_to_position(a_index, a_strides)])
     return _reduce
 
 
